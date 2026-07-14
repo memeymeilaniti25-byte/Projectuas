@@ -1,0 +1,27 @@
+/*
+  variables.css
+  -------------
+  Semua warna & font terpusat di sini.
+  Mau ganti tema warna? Cukup ubah nilai di file ini saja,
+  tidak perlu sentuh file CSS lain.
+*/
+
+:root {
+  --cream-bg: #FDF6EB;
+  --cream-card: #F5EFE3;
+  --cream-input: #EFE6D6;
+  --terracotta: #C0633A;
+  --terracotta-soft: #E3B49B;
+  --wood-brown: #7C4A1E;
+  --text-dark: #3D2E1F;
+  --text-muted: #8A7666;
+  --text-muted-2: #9C8C74;
+  --border-soft: #E6DCC6;
+  --danger: #B3452C;
+  --success: #6E8B5A;
+  --shadow: 0 10px 30px rgba(124, 74, 30, 0.08);
+
+  --font-heading: 'Playfair Display', serif;
+  --font-body: 'DM Sans', sans-serif;
+  --font-mono: 'DM Mono', monospace;
+}

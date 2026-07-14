@@ -1,0 +1,30 @@
+/*
+  base.css
+  --------
+  Reset dasar & pengaturan elemen paling umum (body, card utama).
+*/
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--cream-bg);
+  font-family: var(--font-body);
+  color: var(--text-dark);
+}
+
+.page {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  padding: 40px 16px;
+}
+
+.main-card {
+  width: 100%;
+  max-width: 760px;
+  background: var(--cream-bg);
+  border: 1px solid var(--border-soft);
+  border-radius: 24px;
+  padding: 36px 40px 28px;
+}

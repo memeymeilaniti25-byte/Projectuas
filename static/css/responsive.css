@@ -1,0 +1,12 @@
+/*
+  responsive.css
+  --------------
+  Semua media query dikumpulkan di sini supaya gampang dicek
+  tanpa harus scroll ke setiap file CSS lain.
+*/
+
+@media (max-width: 600px) {
+  .main-card { padding: 24px 18px; }
+  .header { flex-direction: column; gap: 14px; }
+  .options-row { flex-direction: column; align-items: flex-start; }
+}

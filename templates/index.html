@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>To-Do List — Meja Belajar Digital</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=DM+Sans:wght@400;500;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/variables.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/layout.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/components.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/responsive.css') }}">
+</head>
+<body>
+
+<div id="toast-container" class="toast-container"></div>
+
+<main class="page">
+  <div class="card main-card">
+
+    <!-- Header -->
+    <header class="header">
+      <div class="header-text">
+        <p class="eyebrow">MEJA BELAJAR DIGITAL</p>
+        <h1 class="title">To-Do List</h1>
+        <p class="date" id="today-date"></p>
+      </div>
+      <div class="header-icons">
+        <div class="user-bar">
+          <span class="user-name">👤 {{ username }}</span>
+          <form method="POST" action="{{ url_for('main.logout') }}">
+            <button type="submit" class="btn-logout">Keluar</button>
+          </form>
+        </div>
+        <div class="icon-clock">⏰</div>
+        <div class="icon-book">📖</div>
+        <div class="digital-clock" id="digital-clock">--.--.--</div>
+      </div>
+    </header>
+
+    <!-- Progress -->
+    <div class="progress-row">
+      <span id="progress-label">0 dari 0 tugas selesai</span>
+      <span id="progress-percent">0%</span>
+    </div>
+    <div class="progress-bar-track">
+      <div class="progress-bar-fill" id="progress-bar-fill"></div>
+    </div>
+
+    <!-- Form tambah tugas -->
+    <section class="add-task-card">
+      <p class="section-label">TAMBAH TUGAS BARU</p>
+      <div class="add-task-row">
+        <input type="text" id="task-input" placeholder="Tulis tugasmu di sini..." maxlength="120">
+        <button id="add-btn" class="btn-add">+ Tambah</button>
+      </div>
+      <div class="options-row">
+        <div class="pill-group" id="priority-group">
+          <button class="pill priority-pill" data-value="Penting">Penting</button>
+          <button class="pill priority-pill active" data-value="Sedang">Sedang</button>
+          <button class="pill priority-pill" data-value="Santai">Santai</button>
+        </div>
+        <div class="pill-group" id="category-group">
+          <button class="pill category-pill" data-value="Belajar">📖 Belajar</button>
+          <button class="pill category-pill active" data-value="Tugas">✏️ Tugas</button>
+        </div>
+        <button type="button" class="pill reminder-pill" id="reminder-toggle" data-value="Pengingat">🔔 Pengingat</button>
+        <div class="alarm-input">
+          <span>⏰</span>
+          <input type="time" id="alarm-time-input">
+        </div>
+        <div class="alarm-input deadline-input">
+          <span>📅</span>
+          <input type="date" id="deadline-input">
+        </div>
+      </div>
+      <p class="alarm-hint">Prioritas, mode fokus (Belajar/Tugas), dan <strong>Pengingat</strong> bisa dipilih sekaligus. Alarm otomatis aktif untuk tugas berkategori <strong>Belajar</strong>, berprioritas <strong>Penting</strong>, atau saat <strong>Pengingat</strong> diaktifkan. <strong>Deadline</strong> (📅) bersifat opsional untuk menandai batas waktu tugas harus selesai.</p>
+    </section>
+
+    <!-- Pencarian -->
+    <div class="search-row">
+      <span class="search-icon">🔍</span>
+      <input type="text" id="search-input" placeholder="Cari tugas...">
+    </div>
+
+    <!-- Filter -->
+    <nav class="filter-tabs">
+      <button class="tab active" data-filter="semua">Semua</button>
+      <button class="tab" data-filter="aktif">Aktif</button>
+      <button class="tab" data-filter="selesai">Selesai</button>
+      <label class="sort-select-wrap">
+        <span class="sort-icon">↕️</span>
+        <select id="sort-select">
+          <option value="terbaru">Terbaru</option>
+          <option value="terlama">Terlama</option>
+          <option value="manual">Urutan saya (drag)</option>
+          <option value="prioritas">Prioritas</option>
+          <option value="deadline">Deadline terdekat</option>
+          <option value="abjad">Abjad (A-Z)</option>
+        </select>
+      </label>
+      <span class="focus-mode"><span class="dot"></span> focus mode</span>
+    </nav>
+    <p id="reorder-hint" class="reorder-hint" style="display:none;">Seret (drag) kartu tugas ke atas/bawah untuk mengatur urutan sendiri.</p>
+
+    <!-- Daftar tugas -->
+    <section id="task-list" class="task-list">
+      <!-- diisi lewat JS -->
+    </section>
+    <p id="empty-state" class="empty-state" style="display:none;">Belum ada tugas. Tambahkan tugas pertamamu!</p>
+
+    <footer class="footer">
+      <span>// stay focused</span>
+      <span id="remaining-label">0 tasks remaining</span>
+    </footer>
+  </div>
+</main>
+
+<!-- Modal edit tugas -->
+<div id="edit-modal" class="modal-overlay" style="display:none;">
+  <div class="modal-card">
+    <p class="section-label">EDIT TUGAS</p>
+    <div class="add-task-row">
+      <input type="text" id="edit-task-input" placeholder="Tulis tugasmu di sini..." maxlength="120">
+    </div>
+    <div class="options-row">
+      <div class="pill-group" id="edit-priority-group">
+        <button class="pill priority-pill" data-value="Penting">Penting</button>
+        <button class="pill priority-pill" data-value="Sedang">Sedang</button>
+        <button class="pill priority-pill" data-value="Santai">Santai</button>
+      </div>
+      <div class="pill-group" id="edit-category-group">
+        <button class="pill category-pill" data-value="Belajar">📖 Belajar</button>
+        <button class="pill category-pill" data-value="Tugas">✏️ Tugas</button>
+      </div>
+      <button type="button" class="pill reminder-pill" id="edit-reminder-toggle" data-value="Pengingat">🔔 Pengingat</button>
+      <div class="alarm-input">
+        <span>⏰</span>
+        <input type="time" id="edit-alarm-time-input">
+      </div>
+      <div class="alarm-input deadline-input">
+        <span>📅</span>
+        <input type="date" id="edit-deadline-input">
+      </div>
+    </div>
+    <div class="modal-actions">
+      <button id="edit-cancel-btn" class="btn-secondary">Batal</button>
+      <button id="edit-save-btn" class="btn-add">Simpan Perubahan</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal konfirmasi hapus -->
+<div id="delete-modal" class="modal-overlay" style="display:none;">
+  <div class="modal-card">
+    <p class="section-label">HAPUS TUGAS</p>
+    <p class="delete-confirm-text">Yakin mau hapus <strong id="delete-task-title"></strong>? Kamu masih bisa membatalkannya sesaat setelah dihapus.</p>
+    <div class="modal-actions">
+      <button id="delete-cancel-btn" class="btn-secondary">Batal</button>
+      <button id="delete-confirm-btn" class="btn-danger">Hapus</button>
+    </div>
+  </div>
+</div>
+
+<!-- notifikasi suara alarm -->
+<audio id="alarm-sound" preload="auto"></audio>
+
+<script type="module" src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>

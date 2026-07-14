@@ -1,0 +1,236 @@
+/*
+  components.css
+  --------------
+  Komponen kecil yang dipakai berulang:
+  pill/tombol pilihan, kartu item tugas, badge, toast notifikasi.
+*/
+
+/* ---------- Pill / tombol pilihan (prioritas, kategori) ---------- */
+.pill {
+  border: 1px solid var(--border-soft);
+  background: var(--cream-input);
+  color: var(--text-muted);
+  border-radius: 999px;
+  padding: 7px 14px;
+  font-size: 13px;
+  cursor: pointer;
+  font-family: var(--font-body);
+  transition: all 0.15s;
+}
+.priority-pill.active { background: var(--terracotta); color: #fff; border-color: var(--terracotta); }
+.category-pill.active { background: var(--wood-brown); color: #fff; border-color: var(--wood-brown); }
+
+/* Pengingat: toggle independen (bukan bagian dari grup eksklusif),
+   jadi bisa aktif bersamaan dengan prioritas & mode fokus manapun. */
+.reminder-pill {
+  border-style: dashed;
+}
+.reminder-pill.active {
+  background: var(--danger, #C0554A);
+  color: #fff;
+  border-color: var(--danger, #C0554A);
+  border-style: solid;
+}
+
+/* ---------- Item tugas ---------- */
+.task-list { display: flex; flex-direction: column; gap: 12px; }
+.task-item {
+  background: var(--cream-card);
+  border-left: 4px solid var(--terracotta-soft);
+  border-radius: 14px;
+  padding: 16px 18px;
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  position: relative;
+  transition: opacity 0.2s;
+}
+.task-item.priority-Penting { border-left-color: var(--terracotta); }
+.task-item.priority-Sedang { border-left-color: #D9A066; }
+.task-item.priority-Santai { border-left-color: #A9B98B; }
+.task-item.completed { opacity: 0.55; }
+.task-item.overdue { border-left-color: var(--danger); background: #F7E9E3; }
+.task-item.draggable { cursor: grab; }
+.task-item.dragging { opacity: 0.4; cursor: grabbing; }
+
+.drag-handle {
+  flex-shrink: 0;
+  margin-top: 2px;
+  color: var(--text-muted-2);
+  font-size: 16px;
+  line-height: 1;
+  cursor: grab;
+  user-select: none;
+}
+
+.task-checkbox {
+  width: 20px; height: 20px;
+  border-radius: 50%;
+  border: 2px solid var(--terracotta);
+  background: transparent;
+  cursor: pointer;
+  flex-shrink: 0;
+  margin-top: 2px;
+  position: relative;
+}
+.task-checkbox.checked { background: var(--terracotta); }
+.task-checkbox.checked::after {
+  content: '✓';
+  color: #fff;
+  font-size: 12px;
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.task-body { flex: 1; }
+.task-title {
+  font-weight: 700;
+  font-size: 15px;
+  margin: 0 0 8px;
+  color: var(--text-dark);
+}
+.task-item.completed .task-title { text-decoration: line-through; color: var(--text-muted); }
+.task-tags { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+
+.task-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  opacity: 0;
+  transition: opacity 0.15s;
+}
+.task-item:hover .task-actions { opacity: 1; }
+
+.task-edit,
+.task-delete {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--text-muted-2);
+  font-size: 16px;
+}
+.task-edit:hover { color: var(--wood-brown); }
+.task-delete:hover { color: var(--danger); }
+
+/* ---------- Modal edit tugas ---------- */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(61, 46, 31, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 16px;
+}
+.modal-card {
+  background: var(--cream-bg);
+  border-radius: 16px;
+  padding: 22px;
+  width: 100%;
+  max-width: 480px;
+  box-shadow: var(--shadow);
+}
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 16px;
+}
+.btn-secondary {
+  background: var(--cream-input);
+  color: var(--text-muted);
+  border: 1px solid var(--border-soft);
+  border-radius: 999px;
+  padding: 9px 18px;
+  font-size: 14px;
+  cursor: pointer;
+  font-family: var(--font-body);
+}
+.btn-secondary:hover { background: var(--border-soft); }
+.btn-danger {
+  background: var(--danger, #C0554A);
+  color: #fff;
+  border: 1px solid var(--danger, #C0554A);
+  border-radius: 999px;
+  padding: 9px 18px;
+  font-size: 14px;
+  cursor: pointer;
+  font-family: var(--font-body);
+}
+.btn-danger:hover { background: #a8483e; }
+.delete-confirm-text {
+  font-size: 14px;
+  color: var(--text-muted);
+  line-height: 1.5;
+  margin: 4px 0 0;
+}
+
+/* ---------- Badge ---------- */
+.badge {
+  font-size: 12px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-weight: 500;
+}
+.badge-priority-Penting { background: var(--terracotta); color: #fff; }
+.badge-priority-Sedang { background: #EBC896; color: #6B4A1E; }
+.badge-priority-Santai { background: #C9D6B5; color: #4B5A38; }
+.badge-category { background: var(--cream-input); color: var(--text-muted); border: 1px solid var(--border-soft); }
+.badge-reminder { background: var(--danger, #C0554A); color: #fff; }
+.badge-time { background: transparent; color: var(--text-muted-2); font-family: var(--font-mono); }
+.badge-overdue { background: var(--danger); color: #fff; }
+
+/* Deadline: warna berjenjang tergantung urgensi (normal → segera → hari ini → terlambat) */
+.badge-deadline { background: var(--cream-input); color: var(--text-muted); border: 1px solid var(--border-soft); font-family: var(--font-mono); }
+.badge-deadline-soon { background: #F2DDB4; color: #7A5210; }
+.badge-deadline-today { background: var(--terracotta); color: #fff; }
+.badge-deadline-overdue { background: var(--danger); color: #fff; }
+
+/* ---------- Toast notifikasi ---------- */
+.toast-container {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  z-index: 999;
+}
+.toast {
+  min-width: 260px;
+  max-width: 320px;
+  background: var(--wood-brown);
+  color: #fff;
+  padding: 14px 18px;
+  border-radius: 12px;
+  box-shadow: var(--shadow);
+  font-size: 13px;
+  animation: slide-in 0.25s ease;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+.toast-text { flex: 1; }
+.toast-action {
+  flex-shrink: 0;
+  background: rgba(255, 255, 255, 0.18);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  color: #fff;
+  border-radius: 999px;
+  padding: 5px 12px;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: var(--font-body);
+}
+.toast-action:hover { background: rgba(255, 255, 255, 0.3); }
+.toast.success { background: var(--success); }
+.toast.danger { background: var(--danger); }
+.toast.alarm { background: var(--terracotta); }
+@keyframes slide-in {
+  from { transform: translateX(30px); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
