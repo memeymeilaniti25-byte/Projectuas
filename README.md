@@ -1,3 +1,6 @@
+Nama    : Memey Meilani
+NIM     : 20250040074
+Kelas   : TI25A
 # To-Do List — Meja Belajar Digital
 
 Aplikasi To-Do List berbasis web menggunakan **Python (Flask)** dan **SQLite**,
